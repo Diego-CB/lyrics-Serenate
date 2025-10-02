@@ -35,10 +35,13 @@ jobs:
       - name: Build
         run: yarn build
 
+      - name: SPA fallback
+        run: cp dist/index.html dist/404.html
+
       - name: Upload build as Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist # your build output folder
+          path: dist # your build output folder
           # (Optional) name: github-pages
           # (Optional) retention-days: 1
         # This prepares the artifact for the deploy job. :contentReference[oaicite:2]{index=2}
