@@ -1,0 +1,56 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Required for Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deployment at a time
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn" # built-in cache for Yarn deps :contentReference[oaicite:1]{index=1}
+
+      - name: Install
+        run: yarn --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+      - name: Upload build as Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist # your build output folder
+          # (Optional) name: github-pages
+          # (Optional) retention-days: 1
+        # This prepares the artifact for the deploy job. :contentReference[oaicite:2]{index=2}
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        # Publishes the artifact uploaded by the build job. :contentReference[oaicite:3]{index=3}
