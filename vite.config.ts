@@ -5,5 +5,5 @@ import tailwindcss from "@tailwindcss/vite";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: "/lyrics-Serenate/", // <-- IMPORTANT
+  base: "https://github.com/Diego-CB/lyrics-Serenate/", // <-- IMPORTANT
 });
